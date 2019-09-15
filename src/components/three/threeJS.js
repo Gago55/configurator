@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { connect } from 'react-redux'
 import { getBoxColor } from '../../redux/threeSelector';
 import { changeBoxColor } from '../../redux/threeReducer';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 class ThreeScene extends Component {
 
@@ -14,14 +15,16 @@ class ThreeScene extends Component {
     geometry = new THREE.BoxGeometry(1, 1, 1)
     material = new THREE.MeshBasicMaterial({ color: this.props.boxColor })
     cube = new THREE.Mesh(this.geometry, this.material)
+    controls = new OrbitControls(this.camera);
 
     componentDidMount() {
         this.camera.position.z = 4
-        this.renderer.setClearColor('#000000')
+        this.renderer.setClearColor('#fffff3')
         this.renderer.setSize(this.width, this.height)
         this.myDiv.appendChild(this.renderer.domElement)
         this.scene.add(this.cube)
         this.start()
+        window.addEventListener("resize", this.handleWindowResize)
     }
     componentDidUpdate() {
         this.material.color = new THREE.Color(this.props.boxColor)
@@ -30,7 +33,17 @@ class ThreeScene extends Component {
         this.stop()
         this.myDiv.removeChild(this.renderer.domElement)
     }
-
+    handleWindowResize = () => {
+        const width =  window.innerWidth
+        const height = window.innerHeight
+    
+        this.renderer.setSize(width, height)
+        this.camera.aspect = width / height
+    
+        // Note that after making changes to most of camera properties you have to call
+        // .updateProjectionMatrix for the changes to take effect.
+        this.camera.updateProjectionMatrix()
+      }
     start = () => {
         if (!this.frameId) {
             this.frameId = requestAnimationFrame(this.animate)
@@ -38,10 +51,12 @@ class ThreeScene extends Component {
     }
     stop = () => {
         cancelAnimationFrame(this.frameId)
+        window.removeEventListener("resize", this.handleWindowResize)
+        this.controls.dispose()
     }
     animate = () => {
-        this.cube.rotation.x += 0.01
-        this.cube.rotation.y += 0.01
+        // this.cube.rotation.x += 0.01
+        // this.cube.rotation.y += 0.01
         // this.props.changeBoxColor('#ff0000')
         this.renderScene()
         this.frameId = window.requestAnimationFrame(this.animate)
