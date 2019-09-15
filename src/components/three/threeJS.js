@@ -7,8 +7,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 class ThreeScene extends Component {
 
-    width = window.innerWidth
-    height = window.innerHeight
+    // width = window.innerWidth
+    // height = window.innerHeight
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000)
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -20,11 +20,13 @@ class ThreeScene extends Component {
     componentDidMount() {
         this.camera.position.z = 4
         this.renderer.setClearColor('#fffff3')
-        this.renderer.setSize(this.width, this.height)
+        // this.renderer.setSize(this.width, this.height)
+        // this.render.domElement.className = 'contnet'
         this.myDiv.appendChild(this.renderer.domElement)
         this.scene.add(this.cube)
         this.start()
         window.addEventListener("resize", this.handleWindowResize)
+        this.handleWindowResize()
     }
     componentDidUpdate() {
         this.material.color = new THREE.Color(this.props.boxColor)
@@ -34,16 +36,15 @@ class ThreeScene extends Component {
         this.myDiv.removeChild(this.renderer.domElement)
     }
     handleWindowResize = () => {
-        const width =  window.innerWidth
-        const height = window.innerHeight
-    
+        const width =  window.innerWidth *0.75
+        const height =   window.innerHeight
         this.renderer.setSize(width, height)
+
+        this.myDiv.parentElement.lastChild.setAttribute("style",`width:${window.innerWidth *0.25}px`)
+        
         this.camera.aspect = width / height
-    
-        // Note that after making changes to most of camera properties you have to call
-        // .updateProjectionMatrix for the changes to take effect.
         this.camera.updateProjectionMatrix()
-      }
+    }
     start = () => {
         if (!this.frameId) {
             this.frameId = requestAnimationFrame(this.animate)
@@ -66,7 +67,8 @@ class ThreeScene extends Component {
     }
     render() {
         return (
-            <div ref={(mount) => { this.myDiv = mount }} />
+            <div className="content"
+                ref={(mount) => { this.myDiv = mount }} />
         )
     }
 }
