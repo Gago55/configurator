@@ -1,0 +1,1 @@
+export let getBoxColor = state => state.three.boxColor
