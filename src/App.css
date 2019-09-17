@@ -1,27 +1,20 @@
 .appWrapper{
-  /* display: flex */
   display: grid ;
-  /* grid-template-columns: 4; */
   grid-template-columns: auto auto auto;
-  /* grid-template-areas: 
-  "header header header header"
-  "content content content config" ; */
 }
 .header{
-  /* grid-area: header ; */
   background-color: black ;
   color: white ;
   grid-column-start: 1;
   grid-column-end: 5;
 }
 .content{
-  /* grid-area: content ; */
   grid-column-start: 1;
   grid-column-end: 4;
 }
 .configBar{
-  /* grid-area: config ; */
-  background-color: #ff0000;
+  background-color: #fffff3;
+  border-left : solid 1px black;
   grid-column-start: 4;
   grid-column-end: 5;
 }
