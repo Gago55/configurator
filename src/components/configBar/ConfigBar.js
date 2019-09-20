@@ -6,14 +6,18 @@ import {changeBoxColor} from '../../redux/threeReducer'
 
 class ConfigBar extends React.Component {
 
-    colorsDivs = this.props.colors.map( c => <div onClick={ ()=>{this.props.changeBoxColor(c)} } className={styles.colorsDiv} style={{ backgroundColor:c}}>{c}</div>)
+    colorsDivs = this.props.colors.map( c => 
+    <div onClick={ ()=>{this.props.changeBoxColor(c)} } 
+        className={styles.colorsDiv} 
+        style={{ backgroundColor:c}}>
+        </div>)
 
     render() {
         return (
             <div className="configBar">
                 <h2>ConfigBar</h2>
                 <div><h2>Select Model</h2></div>
-                <div style={{display:'grid'}}>
+                <div className={styles.colorsContainer}>
                     {this.colorsDivs}
                 </div>
             </div>
