@@ -1,15 +1,19 @@
 h2{
     text-align: center
 }
-.colorsContainer{
+.itemsContainer{
     display: grid ;
     grid-template-columns: auto auto auto;
 }
 
-.colorsDiv{
+.itemsDiv{
     height: 50px;
     width: 50px ;
     border : solid 1px black ;
     border-radius: 15px ;
-    margin: 10px
+    margin: 10px;
+    text-align: center ;
+    font-size: 12px;
+    /* padding: 5px; */
+    /* margin-left: 50px */
 }

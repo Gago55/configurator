@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
 import { connect } from 'react-redux'
-import { getBoxColor } from '../../redux/threeSelector';
+import { getBoxColor, getActiveGeometry } from '../../redux/threeSelector';
 import { changeBoxColor } from '../../redux/threeReducer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -12,7 +12,7 @@ class ThreeScene extends Component {
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000)
     renderer = new THREE.WebGLRenderer({ antialias: true })
-    geometry = new THREE.BoxGeometry(1, 1, 1)
+    geometry = this.props.activeGeometry
     material = new THREE.MeshBasicMaterial({ color: this.props.boxColor })
     cube = new THREE.Mesh(this.geometry, this.material)
     controls = new OrbitControls(this.camera);
@@ -27,9 +27,13 @@ class ThreeScene extends Component {
         this.start()
         window.addEventListener("resize", this.handleWindowResize)
         this.handleWindowResize()
+
+        window.three = THREE
+        window.cube = this.cube
     }
     componentDidUpdate() {
         this.material.color = new THREE.Color(this.props.boxColor)
+        this.cube.geometry = this.props.activeGeometry
     }
     componentWillUnmount() {
         this.stop()
@@ -74,7 +78,8 @@ class ThreeScene extends Component {
 }
 
 let mapStateToProps = state => ({
-    boxColor: getBoxColor(state)
+    boxColor: getBoxColor(state),
+    activeGeometry: getActiveGeometry(state)
 })
 
 export default connect(mapStateToProps, {
