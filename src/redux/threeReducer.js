@@ -5,7 +5,7 @@ const CHANGE_ACTIVE_GEOMETRY = './threeReducer/CHANGE_ACTIVE_GEOMETRY'
 
 let initialState = {
     boxColor: '#f45612',
-    activeGeometry: new THREE.BoxGeometry(1, 1, 1)
+    activeGeometry: new THREE.SphereGeometry(1, 15, 15)
 }
 
 const threeReducer = (state = initialState, action) => {
