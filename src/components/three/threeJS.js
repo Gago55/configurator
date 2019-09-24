@@ -4,32 +4,32 @@ import { connect } from 'react-redux'
 import { getBoxColor, getActiveGeometry } from '../../redux/threeSelector';
 import { changeBoxColor } from '../../redux/threeReducer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import controlUnit from '../../common/three/controlUnit';
 
 class ThreeScene extends Component {
 
-    // width = window.innerWidth
-    // height = window.innerHeight
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000)
     renderer = new THREE.WebGLRenderer({ antialias: true })
     geometry = this.props.activeGeometry
     material = new THREE.MeshBasicMaterial({ color: this.props.boxColor })
     cube = new THREE.Mesh(this.geometry, this.material)
-    controls = new OrbitControls(this.camera);
+    controls = new OrbitControls(this.camera)
+
+    controlSphere = new controlUnit(this.renderer , this.camera , this.cube , this.controls)
 
     componentDidMount() {
         this.camera.position.z = 4
         this.renderer.setClearColor('#fffff3')
-        // this.renderer.setSize(this.width, this.height)
-        // this.render.domElement.className = 'contnet'
         this.myDiv.appendChild(this.renderer.domElement)
         this.scene.add(this.cube)
         this.start()
         window.addEventListener("resize", this.handleWindowResize)
         this.handleWindowResize()
 
-        window.three = THREE
-        window.cube = this.cube
+        this.scene.add(this.controlSphere.mesh)
+        window.scene = this.renderer
+        window.cube = this.myDiv
     }
     componentDidUpdate() {
         this.material.color = new THREE.Color(this.props.boxColor)
@@ -41,7 +41,7 @@ class ThreeScene extends Component {
     }
     handleWindowResize = () => {
         const width =  window.innerWidth *0.75
-        const height =   window.innerHeight
+        const height =   window.innerHeight - 85.88
         this.renderer.setSize(width, height)
 
         this.myDiv.parentElement.lastChild.setAttribute("style",`width:${window.innerWidth *0.25}px`)
@@ -60,9 +60,7 @@ class ThreeScene extends Component {
         this.controls.dispose()
     }
     animate = () => {
-        // this.cube.rotation.x += 0.01
-        // this.cube.rotation.y += 0.01
-        // this.props.changeBoxColor('#ff0000')
+        this.controlSphere.mesh.position.y=0
         this.renderScene()
         this.frameId = window.requestAnimationFrame(this.animate)
     }
