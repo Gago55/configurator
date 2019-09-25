@@ -11,7 +11,8 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "stats.js": "^0.17.0",
-    "three": "^0.108.0"
+    "three": "^0.108.0",
+    "three-js-csg": "^72.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

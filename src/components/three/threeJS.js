@@ -5,9 +5,10 @@ import { getBoxColor, getActiveGeometry } from '../../redux/threeSelector';
 import { changeBoxColor } from '../../redux/threeReducer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import controlUnit from '../../common/three/controlUnit';
+const ThreeBSP = require('../../../node_modules/three-js-csg/index')(THREE);
 
 class ThreeScene extends Component {
-
+    
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000)
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -16,7 +17,7 @@ class ThreeScene extends Component {
     cube = new THREE.Mesh(this.geometry, this.material)
     controls = new OrbitControls(this.camera)
 
-    controlSphere = new controlUnit(this.renderer , this.camera , this.cube , this.controls)
+    // controlSphere = new controlUnit(this.renderer , this.camera , this.cube , this.controls)
 
     componentDidMount() {
         this.camera.position.z = 4
@@ -27,8 +28,8 @@ class ThreeScene extends Component {
         window.addEventListener("resize", this.handleWindowResize)
         this.handleWindowResize()
 
-        this.scene.add(this.controlSphere.mesh)
-        window.scene = this.renderer
+        // this.scene.add(this.controlSphere.mesh)
+        window.scene = this.scene
         window.cube = this.myDiv
     }
     componentDidUpdate() {
@@ -60,13 +61,35 @@ class ThreeScene extends Component {
         this.controls.dispose()
     }
     animate = () => {
-        this.controlSphere.mesh.position.y=0
+        // this.controlSphere.mesh.position.y=0
         this.renderScene()
         this.frameId = window.requestAnimationFrame(this.animate)
     }
     renderScene = () => {
         this.renderer.render(this.scene, this.camera)
     }
+
+    meshFactory = (mesh1 , mesh2 , operationNumber , material = new THREE.MeshNormalMaterial()) => {
+        // const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
+        // let sphere = new THREE.Mesh(new THREE.SphereGeometry(0.6,50,50))
+        
+        const sBSP = new ThreeBSP(mesh1);
+        const bBSP = new ThreeBSP(mesh2);
+        let sub
+
+        switch(operationNumber){
+            case 0 : sub = bBSP.subtract(sBSP) ; break
+            case 1 : sub = bBSP.union(sBSP) ; break
+            case 2 : sub = bBSP.intersect(sBSP) ; break
+            default : return null
+        }
+      
+        const newMesh = sub.toMesh();
+        newMesh.material = material
+        return Object.assign({}, { csg: newMesh  });
+      
+      }
+
     render() {
         return (
             <div className="content"
